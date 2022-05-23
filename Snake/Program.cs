@@ -24,40 +24,66 @@ class Program
         };
 
         int direction = 0;
+        Console.BufferHeight = Console.WindowHeight;
+        Random randomNumbersGenerator = new Random();
+        Position food = new Position(randomNumbersGenerator.Next(0,Console.WindowHeight),randomNumbersGenerator.Next(0,Console.WindowWidth));
+        Console.SetCursorPosition(food.col,food.row);
+        Console.Write("@");
+
+
         Queue<Position> snakeElements = new Queue<Position>();
 
         for (int i = 0; i <= 5; i++)
         {
             snakeElements.Enqueue(new Position(0, i));
         }
-        
+        foreach (Position position in snakeElements)
+        {
+            Console.SetCursorPosition(position.col, position.row);
+            Console.Write("*");
+        }
+
 
         while (true)
         {
+            if (Console.KeyAvailable)
+            {
+                ConsoleKeyInfo userInput = Console.ReadKey();
+                if (userInput.Key == ConsoleKey.LeftArrow)
+                {
+                    direction = 1;
+                }
+                if (userInput.Key == ConsoleKey.RightArrow)
+                {
+                    direction = 0;
+                }
+                if (userInput.Key == ConsoleKey.UpArrow)
+                {
+                    direction = 3;
+                }
+                if (userInput.Key == ConsoleKey.DownArrow)
+                {
+                    direction = 2;
+                }
+            }
 
-            ConsoleKeyInfo userInput = Console.ReadKey();
-            if (userInput.Key == ConsoleKey.LeftArrow)
-            {
-                direction = 1;
-            }
-            if (userInput.Key == ConsoleKey.RightArrow)
-            {
-                direction = 0;
-            }
-            if (userInput.Key == ConsoleKey.UpArrow)
-            {
-                direction = 3;
-            }
-            if (userInput.Key == ConsoleKey.DownArrow)
-            {
-                direction = 2;
-            }
+            
+            Position snakeHead = snakeElements.Last();
+            snakeElements.Dequeue();
+            Position newDirection = directions[direction];
+            Position snakeNewHead = new Position(snakeHead.row + newDirection.row, snakeHead.col + newDirection.col);
+            snakeElements.Enqueue(snakeNewHead);
+
+            Console.Clear();
 
             foreach (Position position in snakeElements)
             {
                 Console.SetCursorPosition(position.col, position.row);
                 Console.Write("*");
             }
+            Console.SetCursorPosition(food.col, food.row);
+            Console.Write("@");
+            Thread.Sleep(100);
         }
     }
 }
