@@ -69,10 +69,27 @@ class Program
 
             
             Position snakeHead = snakeElements.Last();
-            snakeElements.Dequeue();
             Position newDirection = directions[direction];
             Position snakeNewHead = new Position(snakeHead.row + newDirection.row, snakeHead.col + newDirection.col);
+            if(snakeNewHead.row < 0 || 
+               snakeNewHead.col < 0 || 
+               snakeNewHead.row >= Console.WindowHeight || 
+               snakeNewHead.col >= Console.WindowWidth)
+            {
+                Console.SetCursorPosition(0, 0);
+                Console.WriteLine("Game Over!");
+                return;
+            }
             snakeElements.Enqueue(snakeNewHead);
+            if (snakeNewHead.col == food.col && snakeNewHead.row == food.row)
+            {
+               food = new Position(randomNumbersGenerator.Next(0, Console.WindowHeight), randomNumbersGenerator.Next(0, Console.WindowWidth));
+            }
+            else
+            {
+              snakeElements.Dequeue();
+            }
+
 
             Console.Clear();
 
@@ -81,8 +98,12 @@ class Program
                 Console.SetCursorPosition(position.col, position.row);
                 Console.Write("*");
             }
-            Console.SetCursorPosition(food.col, food.row);
+            
+            
+
+            Console.SetCursorPosition(food.col,food.row);
             Console.Write("@");
+            
             Thread.Sleep(100);
         }
     }
