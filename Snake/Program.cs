@@ -24,6 +24,7 @@ class Program
         };
 
         int direction = 0;
+        int sleepTime = 100;
         Console.BufferHeight = Console.WindowHeight;
         Random randomNumbersGenerator = new Random();
         Position food = new Position(randomNumbersGenerator.Next(0,Console.WindowHeight),randomNumbersGenerator.Next(0,Console.WindowWidth));
@@ -74,16 +75,21 @@ class Program
             if(snakeNewHead.row < 0 || 
                snakeNewHead.col < 0 || 
                snakeNewHead.row >= Console.WindowHeight || 
-               snakeNewHead.col >= Console.WindowWidth)
+               snakeNewHead.col >= Console.WindowWidth ||
+               snakeElements.Contains(snakeNewHead))
             {
                 Console.SetCursorPosition(0, 0);
                 Console.WriteLine("Game Over!");
+                Console.WriteLine("Your points are: {0}", (snakeElements.Count-6) * 100);
                 return;
             }
             snakeElements.Enqueue(snakeNewHead);
+            
             if (snakeNewHead.col == food.col && snakeNewHead.row == food.row)
             {
-               food = new Position(randomNumbersGenerator.Next(0, Console.WindowHeight), randomNumbersGenerator.Next(0, Console.WindowWidth));
+               food = new Position(randomNumbersGenerator.Next(0, Console.WindowHeight), 
+                   randomNumbersGenerator.Next(0, Console.WindowWidth));
+                sleepTime--;
             }
             else
             {
@@ -104,7 +110,7 @@ class Program
             Console.SetCursorPosition(food.col,food.row);
             Console.Write("@");
             
-            Thread.Sleep(100);
+            Thread.Sleep(sleepTime);
         }
     }
 }
