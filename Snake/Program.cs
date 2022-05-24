@@ -15,6 +15,14 @@ class Program
 {
     static void Main(string[] args)
     {
+        byte right = 0;
+        byte left = 1;
+        byte down = 2;
+        byte up = 3;
+        int lastFoodTime = 0;
+        int foodDissapearTime = 8000;
+        int negativePoints = 0;
+
         Position[]directions = new Position[]
         {
             new Position(0, 1), // right
@@ -23,7 +31,7 @@ class Program
             new Position(-1, 0), // up
         };
 
-        int direction = 0;
+        int direction = right;
         int sleepTime = 100;
         Console.BufferHeight = Console.WindowHeight;
         Random randomNumbersGenerator = new Random();
@@ -41,6 +49,7 @@ class Program
         foreach (Position position in snakeElements)
         {
             Console.SetCursorPosition(position.col, position.row);
+            Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.Write("*");
         }
 
@@ -52,19 +61,19 @@ class Program
                 ConsoleKeyInfo userInput = Console.ReadKey();
                 if (userInput.Key == ConsoleKey.LeftArrow)
                 {
-                    direction = 1;
+                    if (direction != right) direction = left;
                 }
                 if (userInput.Key == ConsoleKey.RightArrow)
                 {
-                    direction = 0;
+                    if (direction != left) direction = right;
                 }
                 if (userInput.Key == ConsoleKey.UpArrow)
                 {
-                    direction = 3;
+                    if (direction != down) direction = up;
                 }
                 if (userInput.Key == ConsoleKey.DownArrow)
                 {
-                    direction = 2;
+                    if (direction != up) direction = down;
                 }
             }
 
