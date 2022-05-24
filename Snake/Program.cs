@@ -32,7 +32,7 @@ class Program
         };
 
         int direction = right;
-        int sleepTime = 100;
+        double sleepTime = 100;
         Console.BufferHeight = Console.WindowHeight;
         Random randomNumbersGenerator = new Random();
         Position food = new Position(randomNumbersGenerator.Next(0,Console.WindowHeight),randomNumbersGenerator.Next(0,Console.WindowWidth));
@@ -93,33 +93,28 @@ class Program
                 return;
             }
             snakeElements.Enqueue(snakeNewHead);
+            Console.SetCursorPosition(snakeNewHead.col, snakeNewHead.row); 
+            Console.Write("*");
             
             if (snakeNewHead.col == food.col && snakeNewHead.row == food.row)
             {
-               food = new Position(randomNumbersGenerator.Next(0, Console.WindowHeight), 
+                food = new Position(randomNumbersGenerator.Next(0, Console.WindowHeight), 
                    randomNumbersGenerator.Next(0, Console.WindowWidth));
+                Console.SetCursorPosition(food.col, food.row);
+                Console.Write("@");
                 sleepTime--;
             }
             else
             {
-              snakeElements.Dequeue();
+                Position last = snakeElements.Dequeue();
+                Console.SetCursorPosition(last.col, last.row);
+                Console.Write(" ");
             }
 
 
-            Console.Clear();
+            sleepTime -= 0.01;
 
-            foreach (Position position in snakeElements)
-            {
-                Console.SetCursorPosition(position.col, position.row);
-                Console.Write("*");
-            }
-            
-            
-
-            Console.SetCursorPosition(food.col,food.row);
-            Console.Write("@");
-            
-            Thread.Sleep(sleepTime);
+            Thread.Sleep((int)sleepTime);
         }
     }
 }
