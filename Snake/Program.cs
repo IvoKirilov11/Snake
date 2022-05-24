@@ -39,6 +39,7 @@ class Program
             randomNumbersGenerator.Next(0,Console.WindowWidth));
         lastFoodTime = Environment.TickCount;
         Console.SetCursorPosition(food.col,food.row);
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.Write("@");
 
 
@@ -58,6 +59,7 @@ class Program
 
         while (true)
         {
+            negativePoints++;
             if (Console.KeyAvailable)
             {
                 ConsoleKeyInfo userInput = Console.ReadKey();
@@ -90,14 +92,25 @@ class Program
                snakeElements.Contains(snakeNewHead))
             {
                 Console.SetCursorPosition(0, 0);
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Game Over!");
-                Console.WriteLine("Your points are: {0}", (snakeElements.Count-6) * 100);
+                int userPoints = (snakeElements.Count - 6) * 100 - negativePoints;
+                userPoints = Math.Max(userPoints, 0);
+                Console.WriteLine("Your points are: {0}", userPoints);
                 return;
             }
-            snakeElements.Enqueue(snakeNewHead);
-            Console.SetCursorPosition(snakeNewHead.col, snakeNewHead.row); 
+            Console.SetCursorPosition(snakeHead.col, snakeHead.row);
+            Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.Write("*");
-            
+
+            snakeElements.Enqueue(snakeNewHead);
+            Console.SetCursorPosition(snakeNewHead.col, snakeNewHead.row);
+            Console.ForegroundColor = ConsoleColor.Gray;
+            if (direction == right) Console.Write(">");
+            if (direction == left) Console.Write("<");
+            if (direction == up) Console.Write("^");
+            if (direction == down) Console.Write("v");
+
             if (snakeNewHead.col == food.col && snakeNewHead.row == food.row)
             {
 
@@ -109,6 +122,7 @@ class Program
                 while (snakeElements.Contains(food));
                 lastFoodTime = Environment.TickCount;
                 Console.SetCursorPosition(food.col, food.row);
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write("@");
                 sleepTime--;
             }
@@ -121,7 +135,7 @@ class Program
 
             if (Environment.TickCount - lastFoodTime >= foodDissapearTime)
             {
-                negativePoints = negativePoints + 50;
+                negativePoints = negativePoints + 20;
                 Console.SetCursorPosition(food.col, food.row);
                 Console.Write(" ");
                 do
@@ -133,8 +147,10 @@ class Program
                 lastFoodTime = Environment.TickCount;
             }
             Console.SetCursorPosition(food.col, food.row);
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("@");
             sleepTime -= 0.01;
+            
 
             Thread.Sleep((int)sleepTime);
         }
