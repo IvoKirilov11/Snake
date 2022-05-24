@@ -34,13 +34,9 @@ class Program
         int direction = right;
         double sleepTime = 100;
         Console.BufferHeight = Console.WindowHeight;
-        Random randomNumbersGenerator = new Random();
-        Position food = new Position(randomNumbersGenerator.Next(0,Console.WindowHeight),
-            randomNumbersGenerator.Next(0,Console.WindowWidth));
         lastFoodTime = Environment.TickCount;
-        Console.SetCursorPosition(food.col,food.row);
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.Write("@");
+        Random randomNumbersGenerator = new Random();
+        
 
 
         Queue<Position> snakeElements = new Queue<Position>();
@@ -49,6 +45,18 @@ class Program
         {
             snakeElements.Enqueue(new Position(0, i));
         }
+
+        Position food;
+        do
+        {
+            food = new Position(randomNumbersGenerator.Next(0, Console.WindowHeight),
+                randomNumbersGenerator.Next(0, Console.WindowWidth));
+        }
+        while (snakeElements.Contains(food));
+        Console.SetCursorPosition(food.col, food.row);
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("@");
+
         foreach (Position position in snakeElements)
         {
             Console.SetCursorPosition(position.col, position.row);
