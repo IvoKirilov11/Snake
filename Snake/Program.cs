@@ -35,7 +35,9 @@ class Program
         double sleepTime = 100;
         Console.BufferHeight = Console.WindowHeight;
         Random randomNumbersGenerator = new Random();
-        Position food = new Position(randomNumbersGenerator.Next(0,Console.WindowHeight),randomNumbersGenerator.Next(0,Console.WindowWidth));
+        Position food = new Position(randomNumbersGenerator.Next(0,Console.WindowHeight),
+            randomNumbersGenerator.Next(0,Console.WindowWidth));
+        lastFoodTime = Environment.TickCount;
         Console.SetCursorPosition(food.col,food.row);
         Console.Write("@");
 
@@ -98,8 +100,14 @@ class Program
             
             if (snakeNewHead.col == food.col && snakeNewHead.row == food.row)
             {
-                food = new Position(randomNumbersGenerator.Next(0, Console.WindowHeight), 
-                   randomNumbersGenerator.Next(0, Console.WindowWidth));
+
+                do
+                {
+                    food = new Position(randomNumbersGenerator.Next(0, Console.WindowHeight),
+                       randomNumbersGenerator.Next(0, Console.WindowWidth));
+                }
+                while (snakeElements.Contains(food));
+                lastFoodTime = Environment.TickCount;
                 Console.SetCursorPosition(food.col, food.row);
                 Console.Write("@");
                 sleepTime--;
@@ -111,7 +119,21 @@ class Program
                 Console.Write(" ");
             }
 
-
+            if (Environment.TickCount - lastFoodTime >= foodDissapearTime)
+            {
+                negativePoints = negativePoints + 50;
+                Console.SetCursorPosition(food.col, food.row);
+                Console.Write(" ");
+                do
+                {
+                    food = new Position(randomNumbersGenerator.Next(0, Console.WindowHeight),
+                        randomNumbersGenerator.Next(0, Console.WindowWidth));
+                }
+                while (snakeElements.Contains(food));
+                lastFoodTime = Environment.TickCount;
+            }
+            Console.SetCursorPosition(food.col, food.row);
+            Console.Write("@");
             sleepTime -= 0.01;
 
             Thread.Sleep((int)sleepTime);
